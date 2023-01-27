@@ -1,0 +1,21 @@
+{
+  "dependencies": {
+    "@adiwajshing/baileys": "github:adiwajshing/baileys",
+    "@hapi/boom": "^10.0.0",
+    "qrcode-terminal": "^0.12.0"
+  },
+  "name": "btzap",
+  "version": "1.0.0",
+  "description": "Beact Tennis BOT WhatsApp",
+  "main": "index.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node ./src/index.js"
+  },
+  "keywords": [
+    "btzap"
+  ],
+  "author": "Lucas Awade",
+  "license": "MIT"
+}
