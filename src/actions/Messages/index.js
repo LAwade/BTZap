@@ -1,9 +1,7 @@
-const { BOT_EMOJI, BOT_NAME } = require("../../config");
-
 class Messages {
 
     constructor(){
-        this.prefix = `${BOT_NAME} ${BOT_EMOJI} \n`
+        this.prefix = ``
     }
 
     message(message){

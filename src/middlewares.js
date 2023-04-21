@@ -1,6 +1,6 @@
 const Action = require("./actions")
+const BeachTennis = require("./actions/BeachTennis")
 const Commands = require("./actions/Commands")
-const { BOT_EMOJI } = require("./config")
 const { isCommand, extractDataFromMessage } = require("./utils")
 
 async function middlewares(bot){
@@ -13,8 +13,9 @@ async function middlewares(bot){
 
         const { command, remoteJid } = extractDataFromMessage(baileysMessage) 
         const action = new Action(bot, baileysMessage)
-
         const cmd = new Commands(bot, baileysMessage)
+        const bt = new BeachTennis(bot, baileysMessage)
+
         switch(command.toLowerCase()){
             case 'menu':
                 cmd.menus()
@@ -39,6 +40,14 @@ async function middlewares(bot){
                 break;
             case 'f':
                 action.sticker()
+                break;
+            case 'play':
+            case 'p':
+                bt.play()
+                break;
+            case 'cancelar':
+            case 'c':
+                bt.cancelar()
                 break;
             default:
                 cmd.menus()

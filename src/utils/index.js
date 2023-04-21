@@ -1,8 +1,8 @@
 const { downloadContentFromMessage } = require("@adiwajshing/baileys")
-const { PREFIX, TEMP_FOLDER } = require("../config")
+const { PREFIX, TEMP_FOLDER, LIST_STORAGE } = require("../config")
 const path = require('path')
 const { writeFile } = require('fs/promises')
-
+const { readFileSync,writeFileSync, existsSync } = require("fs")
 
 function extractDataFromMessage(baileysMessage){
     const message = typeMessage(baileysMessage)
@@ -10,6 +10,7 @@ function extractDataFromMessage(baileysMessage){
     if(!message.text){
         return {
             remoteJid: '',
+            participant: '',
             fullMessage: '',
             command: '',
             args: '',
@@ -23,6 +24,7 @@ function extractDataFromMessage(baileysMessage){
 
     return {
         remoteJid: baileysMessage?.key?.remoteJid,
+        participant: baileysMessage?.key?.participant,
         fullMessage: message.text,
         command: command.replace(PREFIX, '').trim(),
         args: arg.trim(),
@@ -44,7 +46,7 @@ function typeMessage(baileysMessage){
             return { type: 'video', text: baileysMessage.message?.extendedTextMessage?.text, content, params: { seconds } }
         }
         if(baileysMessage.message?.conversation || baileysMessage.message.extendedTextMessage?.text){
-            return { type: 'text', text: baileysMessage.message?.conversation, content: null}
+            return { type: 'text', text: baileysMessage.message?.conversation, content: null, params : { verifiedBizName:  baileysMessage.verifiedBizName, pushName:  baileysMessage.pushName }}
         }
     }
     return { type: undefined, text: '', content: null}
@@ -74,8 +76,28 @@ async function downloadSticker(baileysMessage, fileName){
     return filePath
 }
 
+function fileCreate(file, data){
+    const filePath = path.resolve(LIST_STORAGE, file) 
+    writeFileSync(filePath, JSON.stringify(data))
+}
+
+async function fileRead(file){
+    const filePath = path.resolve(LIST_STORAGE, file)
+    if(!existsSync(filePath)){
+        return false
+    }
+    const content = readFileSync(filePath, {encoding : 'utf-8'})
+    if(content){
+        return JSON.parse(content)
+    }
+    return {}
+}
+
+
 module.exports = {
     extractDataFromMessage,
     isCommand,
+    fileRead,
+    fileCreate,
     downloadSticker
 }
